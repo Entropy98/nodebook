@@ -1,0 +1,12 @@
+#!/bin/bash
+cd build
+case $1 in
+  "test")
+    cmake .. -DCMAKE_BUILD_TYPE=TEST
+    ;;
+  *)
+    cmake .. -DCMAKE_BUILD_TYPE=$1
+    ;;
+esac
+
+cmake --build .
