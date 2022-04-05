@@ -4,6 +4,8 @@
  * @date    4/3/2022
  * @brief   Contains Node class information
  */
+#ifndef INC_UTILS_H
+#define INC_UTILS_H
 
 #include <cstdint>
 
@@ -17,3 +19,5 @@ namespace utillib{
 uint32_t getId(void* data);
 
 }//utillib
+
+#endif //INC_UTILS_H

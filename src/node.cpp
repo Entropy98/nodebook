@@ -4,38 +4,39 @@
  * @date    4/3/2022
  * @brief   Contains Node class information
  */
+#include "node.h"
 
 namespace nodelib{
 
-status_t ConnectionHub::addConnection(Node* node){
-  conn = new Connection();
-  conn.node = (void*)node;
-  if(this.head == nullptr){
-    this.head = (void*)&conn;
+status_t ConnectionHub::addConnection(void* node){
+  Connection* conn = new Connection();
+  conn->node = node;
+  if(this->head == nullptr){
+    this->head = conn;
   }
   else{
-    void* ptr = this.head;
+    Connection* ptr = this->head;
     while(ptr->next != nullptr){
       ptr = ptr->next;
     }
-    ptr->next = (void*)&conn;
+    ptr->next = conn;
   }
-  this.size++;
+  this->size++;
   return SUCCESS;
 }
 
 status_t ConnectionHub::deleteConnection(uint32_t id){
   status_t status;
-  if(this.head == nullptr){
+  if(this->head == nullptr){
     status = ERR_NODE_NOT_FOUND;
   }
   else{
-    void* ptr = this.head;
-    void* prev_ptr = nullptr;
+    Connection* ptr = this->head;
+    Connection* prev_ptr = nullptr;
     while(ptr->next != nullptr){
-      if(ptr->node->id == id){
+      if(((Node*)ptr->node)->id == id){
         prev_ptr->next = ptr->next;
-        delete *ptr;
+        delete ptr;
         status = SUCCESS;
         break;
       }
@@ -53,12 +54,12 @@ status_t Node::addConnection(Node* node){
     status = ERR_BAD_PTR;
   }
   else{
-    status = this.connections::addConnection(node);
+    status = this->connections->addConnection(node);
     if(status == SUCCESS){
-      status = node->connections::addConnection(&this);
+      status = node->connections->addConnection(this);
     }
     if(status != SUCCESS){
-      status = this.connections::deleteConnection(node->id);
+      status = this->connections->deleteConnection(node->id);
     }
   }
   return status;
@@ -70,9 +71,17 @@ status_t Node::deleteConnection(uint32_t id){
     status == ERR_NO_ID;
   }
   else{
-    status = this.connections.deleteConnection(id);
+    status = this->connections->deleteConnection(id);
   }
   return status;
+}
+
+status_t LabelNode::store(uint32_t id){
+  return SUCCESS;
+}
+
+status_t LabelNode::remove(uint32_t id){
+  return SUCCESS;
 }
 
 }//nodelib

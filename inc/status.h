@@ -4,9 +4,10 @@
  * @date    4/3/2022
  * @brief   Contains Node class information
  */
-#include <cstdint>
+#ifndef INC_STATUS_H
+#define INC_STATUS_H
 
-namespace statuslib {
+#include <cstdint>
 
 typedef enum{
   SUCCESS,
@@ -17,4 +18,4 @@ typedef enum{
   ERR_NODE_NOT_FOUND,
 }status_t;
 
-}//statuslib
+#endif //INC_STATUS_H

@@ -4,9 +4,12 @@
  * @date    4/3/2022
  * @brief   Contains Node class information
  */
+#ifndef INC_NODE_H
+#define INC_NODE_H
 
 #include "status.h"
 #include "utils.h"
+using namespace utillib;
 
 namespace nodelib{
 
@@ -15,20 +18,20 @@ namespace nodelib{
  */
 class Connection {
   public:
-    void* next;
+    Connection* next;
     void* node;
     Connection(){
       next = nullptr;
       node = nullptr;
     }
-}
+};
 
 /*
  *  @brief  linked-list container for node connections
  */
 class ConnectionHub {
   public:
-    void* head;
+    Connection* head;
     uint64_t size;
     ConnectionHub(){
       head = nullptr;
@@ -40,7 +43,7 @@ class ConnectionHub {
      *  @param  node - node to add to the hub
      *  @return SUCCESS on successful operation
      */
-    status_t addConnection(Node* node);
+    status_t addConnection(void* node);
 
     /*
      *  @brief  deletes a connection from the connection hub
@@ -48,20 +51,29 @@ class ConnectionHub {
      *  @return SUCCESS on successful operation
      */
     status_t deleteConnection(uint32_t id);
-}
+};
 
 /*
  *  @brief  parent class for all nodes
  */
 class Node {
   public:
-    ConnectionHub connections;
+    ConnectionHub* connections;
     void* data;
     uint32_t id;
     Node(){
       connections = new ConnectionHub();
       data = nullptr;
-      id = getId(&this);
+      id = getId(this);
+    }
+    virtual ~Node(){
+      ConnectionHub hub = *connections;
+      uint32_t conn_id;
+      while(connections->head != nullptr){
+        conn_id = ((Node*)(hub.head->node))->id;
+        hub.deleteConnection(conn_id);
+      }
+      delete connections;
     }
     /*
      *  @brief  adds a connection to a node.
@@ -90,26 +102,29 @@ class Node {
      */
     status_t injectConnection(uint32_t id1, uint32_t id2);
 
-    virtual status_t store(uint32_t id);
+    virtual status_t store(uint32_t id) = 0;
 
-    virtual status_t remove(uint32_t id);
-}//Node
+    virtual status_t remove(uint32_t id) = 0;
+};//Node
 
 class LabelNode : public Node {
   public:
+    LabelNode() : Node(){}
     /*
      *  @brief  Nothing This node is not meant to store data
      *  @param  uint32_t id - unique id for the data
      *  @return ERR_NODE_TYPE
      */
-    status_t store(uint32_t id);
+    status_t store(uint32_t id) override;
 
     /*
      *  @brief  Nothing This node is not meant to store data
      *  @param  uint32_t id - unique id for the data
      *  @return ERR_NODE_TYPE
      */
-    status_t remove(uint32_t id);
-}//LabelNode
+    status_t remove(uint32_t id) override;
+};//LabelNode
 
 }//nodelib
+
+#endif //INC_NODE_H
