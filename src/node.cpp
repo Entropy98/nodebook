@@ -1,10 +1,11 @@
 /*
  * @file    node.cpp
  * @author  Harper Weigle
- * @date    4/3/2022
+ * @date    10/11/2022
  * @brief   Contains Node class information
  */
 #include "node.h"
+#include "status.h"
 
 namespace nodelib{
 
@@ -26,7 +27,7 @@ status_t ConnectionHub::addConnection(void* node){
 }
 
 status_t ConnectionHub::deleteConnection(uint32_t id){
-  status_t status;
+  status_t status = SUCCESS;
   if(this->head == nullptr){
     status = ERR_NODE_NOT_FOUND;
   }
@@ -49,7 +50,7 @@ status_t ConnectionHub::deleteConnection(uint32_t id){
 }
 
 status_t Node::addConnection(Node* node){
-  status_t status;
+  status_t status = SUCCESS;
   if(node == nullptr){
     status = ERR_BAD_PTR;
   }
@@ -66,9 +67,9 @@ status_t Node::addConnection(Node* node){
 }
 
 status_t Node::deleteConnection(uint32_t id){
-  status_t status;
+  status_t status = SUCCESS;
   if(id == 0){
-    status == ERR_NO_ID;
+    status = ERR_NO_ID;
   }
   else{
     status = this->connections->deleteConnection(id);
