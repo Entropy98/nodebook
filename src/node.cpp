@@ -23,46 +23,65 @@ status_t ConnectionHub::addConnection(void* node){
     ptr->next = conn;
   }
   this->size++;
+
   return SUCCESS;
 }
 
-status_t ConnectionHub::deleteConnection(uint32_t id){
+status_t ConnectionHub::deleteConnection(uint32_t my_id, uint32_t their_id){
+  bool found = false;
+  Connection* prev_ptr = nullptr;
+  Connection* ptr = this->head;
+  status_t recip_del_status = SUCCESS;
   status_t status = SUCCESS;
+
   if(this->head == nullptr){
     status = ERR_NODE_NOT_FOUND;
   }
-  else{
-    Connection* ptr = this->head;
-    Connection* prev_ptr = nullptr;
+
+  if(status == SUCCESS){
+
     while(ptr->next != nullptr){
-      if(((Node*)ptr->node)->id == id){
-        prev_ptr->next = ptr->next;
-        delete ptr;
-        status = SUCCESS;
+      if(((Node*)ptr->node)->id == their_id){
+        found = true;
         break;
       }
-      ptr = ptr->next;
       prev_ptr = ptr;
+      ptr = ptr->next;
+    }
+
+    if(found == true){
+      prev_ptr = ptr->next;
+      this->head = prev_ptr;
+      recip_del_status = ((Node*)ptr->node)->connections->deleteConnection(((Node*)ptr->node)->id, my_id);
+      if(recip_del_status != ERR_NODE_NOT_FOUND){
+        status = //TODO create new status for changing IDs or smthn
+      }
+    }
+    else{
       status = ERR_NODE_NOT_FOUND;
     }
   }
+
   return status;
 }
 
 status_t Node::addConnection(Node* node){
   status_t status = SUCCESS;
+
   if(node == nullptr){
     status = ERR_BAD_PTR;
   }
-  else{
+
+  if(status == SUCCESS){
     status = this->connections->addConnection(node);
     if(status == SUCCESS){
       status = node->connections->addConnection(this);
-    }
-    if(status != SUCCESS){
-      status = this->connections->deleteConnection(node->id);
+      if(status != SUCCESS){
+        status = this->connections->deleteConnection(this->id, node->id);
+      }
     }
   }
+
   return status;
 }
 
@@ -72,7 +91,7 @@ status_t Node::deleteConnection(uint32_t id){
     status = ERR_NO_ID;
   }
   else{
-    status = this->connections->deleteConnection(id);
+    status = this->connections->deleteConnection(this->id, id);
   }
   return status;
 }

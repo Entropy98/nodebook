@@ -2,10 +2,10 @@
 cd build
 case $1 in
   "test")
-    cmake .. -DCMAKE_BUILD_TYPE=TEST -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+    cmake .. -DBUILD_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=1
     ;;
   *)
-    cmake .. -DCMAKE_BUILD_TYPE=$1 -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+    cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=1
     ;;
 esac
 

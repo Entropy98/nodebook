@@ -47,10 +47,11 @@ class ConnectionHub {
 
     /*
      *  @brief  deletes a connection from the connection hub
-     *  @param  id - id of the node to delete
+     *  @param  my_id - id of the node deleting a connection
+     *  @param  their_id - id of the node to delete
      *  @return SUCCESS on successful operation
      */
-    status_t deleteConnection(uint32_t id);
+    status_t deleteConnection(uint32_t my_id, uint32_t their_id);
 };
 
 /*
@@ -71,7 +72,7 @@ class Node {
       uint32_t conn_id;
       while(connections->head != nullptr){
         conn_id = ((Node*)(hub.head->node))->id;
-        hub.deleteConnection(conn_id);
+        hub.deleteConnection(id, conn_id);
       }
       delete connections;
     }

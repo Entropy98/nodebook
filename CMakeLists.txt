@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
+set(CMAKE_BUILD_TYPE Debug)
 
 project(nodebook)
 add_subdirectory(src)
-if(CMAKE_BUILD_TYPE STREQUAL "TEST")
+if(BUILD_TESTS)
   add_subdirectory(tests)
   add_executable(${PROJECT_NAME}_tests tests/unit_tests.cpp)
   target_compile_options(${PROJECT_NAME}_tests PUBLIC
@@ -15,6 +16,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "TEST")
     -Wextra
     -O0
     -Wunreachable-code
+    -g
     tests
     src
     )
@@ -28,7 +30,7 @@ else()
     -Wextra
     -O0
     -Wunreachable-code
-    -ggdb
+    -g
     src
     )
 endif()
