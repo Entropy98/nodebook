@@ -241,7 +241,7 @@ int main(){
   test_num++;
 
   printf("Running Test %d: Deletion Tests\n",test_num);
-  printf("Deleteing Node 2\n");
+  printf("Deleting Node 2\n");
   delete node2;
   /*
    * Map: (1)<->(3)
@@ -264,7 +264,7 @@ int main(){
     printf("Test %d Failed: Node1 Connection 1 ID should be %d but was %d\n",test_num, node3->id, test_id);
     return test_num;
   }
-  printf("Deleteing Node 1");
+  printf("Deleting Node 1\n");
   delete node1;
   /*
    * Map: (3)
@@ -273,6 +273,7 @@ int main(){
     printf("Test %d Failed: Node1 did not fully disconnect properly\n",test_num);
     return test_num;
   }
+  delete node3;
 
   printf("All Tests Passed\n");
   return 0;

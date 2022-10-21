@@ -39,22 +39,30 @@ status_t ConnectionHub::deleteConnection(uint32_t my_id, uint32_t their_id){
   }
 
   if(status == SUCCESS){
-
-    while(ptr->next != nullptr){
-      if(((Node*)ptr->node)->id == their_id){
-        found = true;
-        break;
+    if(((Node*)(this->head->node))->id == their_id){
+      found = true;
+    }
+    else{
+      while(ptr->next != nullptr){
+        if(((Node*)ptr->node)->id == their_id){
+          found = true;
+          break;
+        }
+        prev_ptr = ptr;
+        ptr = ptr->next;
       }
-      prev_ptr = ptr;
-      ptr = ptr->next;
     }
 
     if(found == true){
-      prev_ptr = ptr->next;
-      this->head = prev_ptr;
-      recip_del_status = ((Node*)ptr->node)->connections->deleteConnection(((Node*)ptr->node)->id, my_id);
-      if(recip_del_status != ERR_NODE_NOT_FOUND){
-        status = //TODO create new status for changing IDs or smthn
+      if(prev_ptr == nullptr){ // Disconnecting first node in list
+        this->head = this->head->next;
+      }
+      else{ // Can assume head does not need to change because it should be first
+        prev_ptr->next = ptr->next;
+      }
+      recip_del_status = ((Node*)ptr->node)->deleteConnection(my_id);
+      if((ERR_NODE_NOT_FOUND != recip_del_status) && (SUCCESS != recip_del_status)){
+        status = ERR_ID_CHANGE;
       }
     }
     else{
@@ -92,6 +100,9 @@ status_t Node::deleteConnection(uint32_t id){
   }
   else{
     status = this->connections->deleteConnection(this->id, id);
+    if(SUCCESS == status){
+      this->connections->size--;
+    }
   }
   return status;
 }
