@@ -1,70 +1,70 @@
 #include <iostream>
 #include "node.h"
-#include "status.h"
+#include "unit_tests.h"
 #include "utils.h"
 
-using namespace std;
-using namespace utillib;
-using namespace nodelib;
-
-int main(){
-  uint8_t test_num = 0;
-  status_t status;
-
-  /*
-   * -------------------
-   * Utility Tests
-   * -------------------
-   */
-
+status_t utilityTests(){
   printf("Running Test %d: Utility Tests\n",test_num);
   uint8_t val1 = 0;
   uint8_t val2 = 1;
   uint32_t id1 = getId(&val1);
   uint32_t id2 = getId(&val2);
+  status_t result = SUCCESS;
+
   if(id1 == id2){
     printf("Test %d Failed: Objects returned identical hashes\n",test_num);
-    return test_num;
+    result = ERR_UNSPECIFIED;
   }
-  id2 = getId(&val1);
-  if(id1 != id2){
-    printf("Test %d Failed: Same object has multiple hashes\n",test_num);
-    return test_num;
+  if(SUCCESS == result){
+    id2 = getId(&val1);
+    if(id1 != id2){
+      printf("Test %d Failed: Same object has multiple hashes\n",test_num);
+      result = ERR_UNSPECIFIED;
+    }
   }
-  test_num++;
 
-  /*
-   * -------------------
-   * Interaction Tests
-   * -------------------
-   */
+  return result;
+}
 
+status_t interactionTests(){
   printf("Running Test %d: Interaction Tests\n",test_num);
   LabelNode* node1 = new LabelNode();
   LabelNode* node2 = new LabelNode();
+  status_t result = SUCCESS;
+  uint32_t test_id = 0;
 
-  status = node1->addConnection(node2);
+  result = node1->addConnection(node2);
   /*
    * Map: (1)<->(2)
    */
-  if(status != SUCCESS){
+  if(result != SUCCESS){
     printf("Test %d Failed with code %d: Node1 returned bad status when connecting Node2\n",test_num, status);
-    return test_num;
   }
-  uint32_t test_id = ((LabelNode*)(node1->connections->head->node))->id;
-  printf("Connecting Node 1 to Node 2\n");
-  if(test_id != node2->id){
-    printf("Test %d Failed: Node1 Connection 1 ID should be %d but was %d\n",test_num, node2->id, test_id);
-    return test_num;
+
+  if(SUCCESS == result){
+    test_id = ((LabelNode*)(node1->connections->head->node))->id;
+    printf("Connecting Node 1 to Node 2\n");
+    if(test_id != node2->id){
+      printf("Test %d Failed: Node1 Connection 1 ID should be %d but was %d\n",test_num, node2->id, test_id);
+      result = ERR_UNSPECIFIED;
+    }
   }
-  test_id = ((LabelNode*)(node2->connections->head->node))->id;
-  if(test_id != node1->id){
-    printf("Test %d Failed: Node2 Connection 1 ID should be %d but was %d\n",test_num, node2->id, test_id);
-    return test_num;
+
+  if(SUCCESS == result){
+    test_id = ((LabelNode*)(node2->connections->head->node))->id;
+    if(test_id != node1->id){
+      printf("Test %d Failed: Node2 Connection 1 ID should be %d but was %d\n",test_num, node2->id, test_id);
+      result = ERR_UNSPECIFIED;
+    }
   }
-  if(node1->connections->size != 1u){
-    printf("Test %d Failed: Node1 reported a size of %ld. 1 was expected\n",test_num,node1->connections->size);
+
+  if(SUCCESS == result){
+    if(node1->connections->size != 1u){
+      printf("Test %d Failed: Node1 reported a size of %ld. 1 was expected\n",test_num,node1->connections->size);
+      result = ERR_UNSPECIFIED;
+    }
   }
+
   if(node2->connections->size != 1u){
     printf("Test %d Failed: Node2 reported a size of %ld. 1 was expected\n",test_num,node2->connections->size);
   }
@@ -238,7 +238,7 @@ int main(){
     printf("Test %d Failed: Node3 reported a size of %ld. 2 was expected\n",test_num,node3->connections->size);
   }
 
-  test_num++;
+}
 
   printf("Running Test %d: Deletion Tests\n",test_num);
   printf("Deleting Node 2\n");

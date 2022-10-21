@@ -17,6 +17,7 @@ typedef enum{
   ERR_NO_ID           = 4,
   ERR_NODE_NOT_FOUND  = 5,
   ERR_ID_CHANGE       = 6,
+  ERR_UNSPECIFIED     = 99,
 }status_t;
 
 #endif //INC_STATUS_H
