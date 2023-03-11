@@ -86,7 +86,7 @@ status_t interactionTests(uint8_t* test_num){
    */
   if(result != SUCCESS){
     printf("Test %d Failed with code %d: Node1 returned bad status when connecting Node3\n",*test_num, result);
-    return *test_num;
+    return result;
   }
   test_num++;
 
@@ -94,14 +94,14 @@ status_t interactionTests(uint8_t* test_num){
   printf("Connecting Node 1 to Node 3\n");
   if(test_id != node3->id){
     printf("Test %d Failed: Node1 Connection 2 ID should be %d but was %d\n",*test_num, node3->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
   test_id = ((Node*)(node3->connections->head->node))->id;
   if(test_id != node1->id){
     printf("Test %d Failed: Node3 Connection 1 ID should be %d but was %d\n",*test_num, node1->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
@@ -127,27 +127,27 @@ status_t interactionTests(uint8_t* test_num){
    */
   if(result != SUCCESS){
     printf("Test %d Failed with code %d: Node1 returned bad status when disconnecting Node2\n",*test_num, result);
-    return *test_num;
+    return result;
   }
   test_num++;
 
   if(node2->connections->head != nullptr){
     printf("Test %d Failed: Node2 did not fully disconnect properly\n",*test_num);
-    return *test_num;
+    return result;
   }
   test_num++;
 
   test_id = ((Node*)(node1->connections->head->node))->id;
   if(test_id != node3->id){
     printf("Test %d Failed: Node1 Connection 1 ID should be %d but was %d\n",*test_num, node3->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
   test_id = ((Node*)(node3->connections->head->node))->id;
   if(test_id != node1->id){
     printf("Test %d Failed: Node3 Connection 1 ID should be %d but was %d\n",*test_num, node1->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
@@ -173,19 +173,19 @@ status_t interactionTests(uint8_t* test_num){
    */
   if(result != SUCCESS){
     printf("Test %d Failed: Node3 returned bad status when disconnecting Node1\n",*test_num);
-    return *test_num;
+    return result;
   }
   test_num++;
 
   if(node1->connections->head != nullptr){
     printf("Test %d Failed: Node1 did not fully disconnect properly\n",*test_num);
-    return *test_num;
+    return result;
   }
   test_num++;
 
   if(node3->connections->head != nullptr){
     printf("Test %d Failed: Node3 did not fully disconnect properly\n",*test_num);
-    return *test_num;
+    return result;
   }
   test_num++;
 
@@ -212,14 +212,14 @@ status_t interactionTests(uint8_t* test_num){
   test_id = ((Node*)(node2->connections->head->node))->id;
   if(test_id != node3->id){
     printf("Test %d Failed: Node2 Connection 1 ID should be %d but was %d\n",*test_num, node3->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
   test_id = ((Node*)(node3->connections->head->node))->id;
   if(test_id != node2->id){
     printf("Test %d Failed: Node3 Connection 1 ID should be %d but was %d\n",*test_num, node2->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
@@ -246,14 +246,14 @@ status_t interactionTests(uint8_t* test_num){
   test_id = ((Node*)(node2->connections->head->next->node))->id;
   if(test_id != node1->id){
     printf("Test %d Failed: Node2 Connection 2 ID should be %d but was %d\n",*test_num, node1->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
   test_id = ((Node*)(node1->connections->head->node))->id;
   if(test_id != node2->id){
     printf("Test %d Failed: Node1 Connection 1 ID should be %d but was %d\n",*test_num, node2->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
@@ -284,14 +284,14 @@ status_t interactionTests(uint8_t* test_num){
   test_id = ((Node*)(node1->connections->head->next->node))->id;
   if(test_id != node3->id){
     printf("Test %d Failed: Node2 Connection 2 ID should be %d but was %d\n",*test_num, node3->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
   test_id = ((Node*)(node3->connections->head->next->node))->id;
   if(test_id != node1->id){
     printf("Test %d Failed: Node2 Connection 2 ID should be %d but was %d\n",*test_num, node1->id, test_id);
-    return *test_num;
+    return result;
   }
   test_num++;
 
@@ -318,27 +318,27 @@ status_t interactionTests(uint8_t* test_num){
    */
   if(node3->connections->head->next != nullptr){
     printf("Test %d Failed: Node2 did not fully disconnect properly\n",*test_num);
-    return *test_num;
+    return result;
   }
   *test_num++;
 
   if(node1->connections->head->next != nullptr){
     printf("Test %d Failed: Node2 did not fully disconnect properly\n",*test_num);
-    return *test_num;
+    return result;
   }
   *test_num++;
 
   test_id = ((Node*)(node3->connections->head->node))->id;
   if(test_id != node1->id){
     printf("Test %d Failed: Node3 Connection 1 ID should be %d but was %d\n",*test_num, node1->id, test_id);
-    return *test_num;
+    return result;
   }
   *test_num++;
 
   test_id = ((Node*)(node1->connections->head->node))->id;
   if(test_id != node3->id){
     printf("Test %d Failed: Node1 Connection 1 ID should be %d but was %d\n",*test_num, node3->id, test_id);
-    return *test_num;
+    return result;
   }
   *test_num++;
 
@@ -349,7 +349,7 @@ status_t interactionTests(uint8_t* test_num){
    */
   if(node3->connections->head != nullptr){
     printf("Test %d Failed: Node1 did not fully disconnect properly\n",*test_num);
-    return *test_num;
+    return result;
   }
   delete node3;
   *test_num++;

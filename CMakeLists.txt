@@ -7,7 +7,7 @@ project(nodebook)
 add_subdirectory(src)
 if(BUILD_TESTS)
   add_subdirectory(tests)
-  add_executable(${PROJECT_NAME}_tests tests/unit_tests.cpp)
+  add_executable(${PROJECT_NAME}_tests tests/main.cpp)
   target_compile_options(${PROJECT_NAME}_tests PUBLIC
     -g
     )
