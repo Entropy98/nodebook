@@ -39,6 +39,7 @@ status_t ConnectionHub::deleteConnection(uint32_t my_id, uint32_t their_id){
   }
 
   if(status == SUCCESS){
+    // look for node
     if(((Node*)(this->head->node))->id == their_id){
       found = true;
     }
@@ -53,6 +54,7 @@ status_t ConnectionHub::deleteConnection(uint32_t my_id, uint32_t their_id){
       }
     }
 
+    // delete the connection
     if(found == true){
       if(prev_ptr == nullptr){ // Disconnecting first node in list
         this->head = this->head->next;

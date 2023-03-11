@@ -310,7 +310,7 @@ status_t interactionTests(uint8_t* test_num){
   }
   test_num++;
 
-  printf("Running Test %d: Deletion Tests\n",*test_num);
+  printf("Running Test %d: Clean Up Tests\n",*test_num);
   printf("Deleting Node 2\n");
   delete node2;
   /*
